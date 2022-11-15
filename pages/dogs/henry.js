@@ -1,13 +1,19 @@
 import Image from "next/image";
-export default function Henry() {
+import Head from "next/head";
+
+export default function Henry({ data }) {
   return (
     <>
-      <h1>Henry doggo</h1>
+      <Head>
+        <title>{data.title}</title>
+      </Head>
+      <h1>{data.content.heading}</h1>
+      <p>{data.content.text}</p>
       <Image
-        src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e"
-        alt="Cute dog"
-        width="4240"
-        height="2831"
+        src={data.content.image.src}
+        alt={data.content.image.alt}
+        width={data.content.image.width}
+        height={data.content.image.height}
         //disaples lazy load - do that if img is above the page fold
         priority
         sizes="(max-width: 768px) 100vw,
@@ -16,4 +22,14 @@ export default function Henry() {
       />
     </>
   );
+}
+export async function getStaticProps() {
+  const resp = await fetch("https://bucolic-bombolone-857476.netlify.app/api/dogs/henry");
+  const data = await resp.json();
+  console.log(data);
+  return {
+    props: {
+      data,
+    },
+  };
 }
